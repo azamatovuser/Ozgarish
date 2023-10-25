@@ -14,6 +14,8 @@ class TaskListAPIView(generics.ListAPIView):
     serializer_class = TaskListSerializer
     permission_classes = [IsAuthenticated]
 
+
+    # filtering tasks by day
     def get_queryset(self):
         qs = super().get_queryset()
         account = self.request.user
@@ -25,3 +27,11 @@ class TaskRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskDetailSerializer
     permission_classes = [IsAuthenticated]
+
+
+    # filtering task by account and day
+    def get_queryset(self):
+        qs = super().get_queryset()
+        account = self.request.user
+        day_id = self.kwargs.get('day_id')
+        return qs.filter(account=account, day_id=day_id)
