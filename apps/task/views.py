@@ -3,6 +3,7 @@ from .models import Day, Time, Task
 from .serializers import DaySerializer, TaskListSerializer, \
     TaskDetailSerializer, TimeSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 
 class DayListAPIView(generics.ListAPIView):
@@ -45,7 +46,24 @@ class TaskRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class TimeTotalAPIView(generics.ListAPIView):
-    pass
+    serializer_class = TimeSerializer
+
+    def get_queryset(self):
+        day_id = self.kwargs['day_id']
+        queryset = Time.objects.filter(task__day_id=day_id)
+        return queryset
+
+    def get_total_time(self, queryset):
+        total_hours = sum([time.hours for time in queryset])
+        total_minutes = sum([time.minutes for time in queryset])
+        total_hours += total_minutes // 60
+        total_minutes %= 60
+        return {"hours": total_hours, "minutes": total_minutes}
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        total_time = self.get_total_time(queryset)
+        return Response(total_time)
 
 
 class TimeCreateAPIView(generics.CreateAPIView):
