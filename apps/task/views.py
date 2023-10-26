@@ -1,6 +1,7 @@
 from rest_framework import generics
-from .models import Day, Task
-from .serializers import DaySerializer, TaskListSerializer, TaskDetailSerializer
+from .models import Day, Time, Task
+from .serializers import DaySerializer, TaskListSerializer, \
+    TaskDetailSerializer, TimeSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -23,6 +24,12 @@ class TaskListAPIView(generics.ListAPIView):
         return qs.filter(account=account, day_id=day_id)
 
 
+class TaskCreateAPIView(generics.CreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskDetailSerializer
+    permission_classes = [IsAuthenticated]
+
+
 class TaskRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskDetailSerializer
@@ -35,3 +42,12 @@ class TaskRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
         account = self.request.user
         day_id = self.kwargs.get('day_id')
         return qs.filter(account=account, day_id=day_id)
+
+
+class TimeTotalAPIView(generics.ListAPIView):
+    pass
+
+
+class TimeCreateAPIView(generics.CreateAPIView):
+    queryset = Time.objects.all()
+    serializer_class = TimeSerializer
