@@ -90,16 +90,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-
-    # production PostgreSQL databasae
-    # "default": dj_database_url.parse(config("DATABASE_URL")),
-
     # local sqlite database
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-
     # local PostgreSQL database
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',

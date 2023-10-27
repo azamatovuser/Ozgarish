@@ -1,4 +1,7 @@
+# django secret key
 SECRET_KEY=12345
+
+# PostgreSQL
 NAME=12345
 USER=12345
 PASSWORD=12345
