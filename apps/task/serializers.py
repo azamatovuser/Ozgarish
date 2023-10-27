@@ -23,4 +23,14 @@ class TaskListSerializer(serializers.ModelSerializer):
 class TaskDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = ('id', 'account', 'title', 'description', 'is_completed', 'day', 'time')
+        extra_kwargs = {
+            'account': {'read_only': True}
+        }
+
+    def create(self, attrs):
+        request = self.context['request']
+        account = request.user
+        task = Task(account=account, **attrs)
+        task.save()
+        return attrs
